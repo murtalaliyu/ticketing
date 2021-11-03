@@ -1,0 +1,9 @@
+Ticketing App
+-------------
+
+1. Model
+--------
+Users
+Events
+Tickets
+Orders
