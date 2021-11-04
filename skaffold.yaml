@@ -5,10 +5,12 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #  push: false
+  googleCloudBuild:
+    projectId: lucky-triode-331100
   artifacts:
-    - image: b1uebank/auth
+    - image: us.gcr.io/lucky-triode-331100/auth
       context: auth
       docker:
         dockerfile: Dockerfile
