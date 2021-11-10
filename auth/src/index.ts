@@ -36,6 +36,11 @@ app.all('*', async (req, res) => {
 app.use(errorHandler);
 
 const start = async () => {
+  // make sure env variables are defined
+  if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined');
+  }
+
   try {
     await mongoose.connect('mongodb://auth-mongo-clusterip-srv:27017/auth');
     console.log('Connected to MongoDB');

@@ -31,9 +31,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   }
+}, {
+  // to remove password and __v, and rename _id to just id from response.
+  // note: this is usually done on the View side of an MVC app but works here regardless
+  toJSON: {
+    transform(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+      delete ret.__v;
+    }
+  }
 });
 
-// hash password
+// hash password before persisting
 userSchema.pre('save', async function(done) {
   if (this.isModified('password')) {
     const hashed = await Password.toHash(this.get('password'));
