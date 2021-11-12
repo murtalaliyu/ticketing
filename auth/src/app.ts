@@ -14,11 +14,12 @@ const app = express();
 app.set('trust proxy', true);   // trust requests because traffic is currently being proxied to our app through ingress-nginx
 app.use(json());
 // cookies will not be encrypted because the contained JWT is already so.
-// require that cookies only be used if users visit our app over an HTTPS connection.
+// require that cookies only be sent back if users visit our app over an HTTPS connection.
+// we will use an env variable to make secure false when sending requests in a test env, otherwise true
 app.use(
   cookieSession({
     signed: false,
-    secure: true
+    secure: process.env.NODE_ENV !== 'test'
   })
 );
 
