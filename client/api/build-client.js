@@ -1,3 +1,5 @@
+// This function helps us make requests inside a getInitialProps function
+
 import axios from "axios";
 
 export default ({ req }) => {
