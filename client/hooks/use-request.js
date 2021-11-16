@@ -1,4 +1,4 @@
-// This function can only by called/used inside of a react component. We cannot use this in getInitialProps
+// This function can only be called/used inside of a react component. We cannot use this in getInitialProps
 
 import axios from "axios";
 import { useState } from "react";

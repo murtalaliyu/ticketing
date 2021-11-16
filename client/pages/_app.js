@@ -1,6 +1,6 @@
 // Adding bootstrap css
 import 'bootstrap/dist/css/bootstrap.css';
-import buildClient from '../api/build-client';  // useRequest can only by called/used inside of a react component. That is why we have to use buildClient which uses axios for requests in getInitialProps
+import buildClient from '../api/build-client';  // useRequest can only be called/used inside of a react component. That is why we have to use buildClient which uses axios for requests in getInitialProps
 import Header from '../components/header';
 
 /*
