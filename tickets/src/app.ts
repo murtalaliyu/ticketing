@@ -2,13 +2,10 @@ import express from "express";
 import 'express-async-errors';
 import { json } from "body-parser";
 import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from "@bluepink-tickets/common";
+import { errorHandler, NotFoundError, currentUser } from "@bluepink-tickets/common";
 
 // import routes
-import { currentUserRouter } from "./routes/current-user";
-import { signinRouter } from "./routes/signin";
-import { signoutRouter } from "./routes/signout";
-import { signupRouter } from "./routes/signup";
+import { createTicketRouter } from "./routes/new";
 
 const app = express();
 app.set('trust proxy', true);   // trust requests because traffic is currently being proxied to our app through ingress-nginx
@@ -22,12 +19,10 @@ app.use(
     secure: process.env.NODE_ENV !== 'test'
   })
 );
+app.use(currentUser); // make sure this comes after the cookieSession middleware so that the cookieSession middleware can take a look at the cookie and set the req.session property
 
 // handle routes
-app.use(currentUserRouter);
-app.use(signinRouter);
-app.use(signoutRouter);
-app.use(signupRouter);
+app.use(createTicketRouter);
 
 // handle invalid routes
 app.all('*', async (req, res) => {

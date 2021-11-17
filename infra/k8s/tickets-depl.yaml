@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: tickets
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: us.gcr.io/lucky-triode-331100/auth
+        - name: tickets
+          image: us.gcr.io/lucky-triode-331100/tickets
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-clusterip-srv:27017/auth'
+              value: 'mongodb://tickets-mongo-clusterip-srv:27017/tickets'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -27,12 +27,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-clusterip-srv
+  name: tickets-clusterip-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
-      port: 10000
-      targetPort: 10000
+      port: 10001
+      targetPort: 10001
