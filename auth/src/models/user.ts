@@ -53,10 +53,12 @@ userSchema.pre('save', async function(done) {
   done();
 });
 
+// build User
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
 
+// create Ticket model
 const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
 
 export { User };
