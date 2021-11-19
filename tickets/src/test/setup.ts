@@ -1,7 +1,5 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';  // adding ConnectOptions
-import request from 'supertest';
-import { app } from '../app';
 import jwt from 'jsonwebtoken';
 
 jest.setTimeout(60000); // added this to avoid premature timeout on long-running tests
@@ -46,7 +44,7 @@ afterAll(async () => {
 global.getCookie = () => {
   // build a JWT payload { id, email }
   const payload = {
-    id: 'thisisafakeidhahahaha',
+    id: new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com'
   };
 

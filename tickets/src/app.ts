@@ -6,6 +6,9 @@ import { errorHandler, NotFoundError, currentUser } from "@bluepink-tickets/comm
 
 // import routes
 import { createTicketRouter } from "./routes/new";
+import { showTicketRouter } from "./routes/show";
+import { indexTicketRouter } from "./routes";
+import { updateTicketRouter } from "./routes/update";
 
 const app = express();
 app.set('trust proxy', true);   // trust requests because traffic is currently being proxied to our app through ingress-nginx
@@ -23,6 +26,9 @@ app.use(currentUser); // make sure this comes after the cookieSession middleware
 
 // handle routes
 app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 // handle invalid routes
 app.all('*', async (req, res) => {
