@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import { NotFoundError, validateRequest, NotAuthorizedError, requireAuth } from '@bluepink-tickets/common';
 import { Ticket } from '../models/ticket';
 import { body } from 'express-validator';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -33,8 +35,15 @@ router.put(
     });
     await ticket.save();
 
-    // return the updated ticket
-    res.send(ticket);
+    // emit ticket:updated event
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId
+    });
+
+    res.send(ticket); // return the updated ticket
 });
 
 export { router as updateTicketRouter };

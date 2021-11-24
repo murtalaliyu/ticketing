@@ -9,11 +9,12 @@ declare global {
   var getCookie: () => string[];
 }
 
+jest.mock('../nats-wrapper.ts'); // mock nats-wrapper 
+
 // start mongoose before all tests are run
 let mongo: any;
 beforeAll(async () => {
-  // set JWT_KEY env variable
-  process.env.JWT_KEY = 'asfdsaf';
+  process.env.JWT_KEY = 'asfdsaf';  // set JWT_KEY env variable
 
   //mongo = new MongoMemoryServer(); this has been deprecated
   mongo = await MongoMemoryServer.create();
@@ -27,8 +28,9 @@ beforeAll(async () => {
 
 // reset mongoose db before each test is run
 beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
+  jest.clearAllMocks(); // to avoid data pollution
 
+  const collections = await mongoose.connection.db.collections();
   for (let collection of collections) {
     await collection.deleteMany({});
   }
@@ -48,18 +50,13 @@ global.getCookie = () => {
     email: 'test@test.com'
   };
 
-  // create the JWT
-  const token = jwt.sign(payload, process.env.JWT_KEY!);
+  const token = jwt.sign(payload, process.env.JWT_KEY!);  // create the JWT
 
-  // build session object { JWT: MY_JWT }
-  const session = { jwt: token };
+  const session = { jwt: token }; // build session object { JWT: MY_JWT }
 
-  // turn that session into JSON
-  const sessionJSON = JSON.stringify(session);
+  const sessionJSON = JSON.stringify(session);  // turn that session into JSON
 
-  // take JSON and encode it as base64
-  const base64 = Buffer.from(sessionJSON).toString('base64');
+  const base64 = Buffer.from(sessionJSON).toString('base64'); // take JSON and encode it as base64
 
-  // return a string that's the cookie with the encoded data
-  return [`express:sess=${base64}`];
+  return [`express:sess=${base64}`];  // return a string that's the cookie with the encoded data
 };
