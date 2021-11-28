@@ -24,6 +24,13 @@ spec:
                 name: tickets-clusterip-srv
                 port:
                   number: 10001
+          - path: /api/orders/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: orders-clusterip-srv
+                port:
+                  number: 10002
           - path: /?(.*)
             pathType: Prefix
             backend:

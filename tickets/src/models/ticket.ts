@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 
 // An interface that describes the properties
 // that are required to create a new Ticket
