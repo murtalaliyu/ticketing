@@ -1,13 +1,26 @@
-import express from "express";
-import { json } from "body-parser";
+import mongoose from 'mongoose';
 
-const app = express();
-app.use(json());
+import { app } from './app';
 
-app.get('/api/users/currentuser', (req, res) => {
-  res.send('Hi there!');
-});
+const start = async () => {
+  // make sure env variables are defined
+  if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined');
+  }
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI must be defined');
+  }
 
-app.listen(3000, () => {
-  console.log('Listening on port 3000!');
-});
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error(err);
+  }
+
+  app.listen(10000, () => {
+    console.log('Listening on port 10000');
+  });
+}
+
+start();

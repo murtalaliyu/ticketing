@@ -5,11 +5,37 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #  push: false
+  googleCloudBuild:
+    projectId: lucky-triode-331100
   artifacts:
-    - image: b1uebank/auth
+    - image: us.gcr.io/lucky-triode-331100/auth
       context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: us.gcr.io/lucky-triode-331100/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: us.gcr.io/lucky-triode-331100/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: us.gcr.io/lucky-triode-331100/orders
+      context: orders
       docker:
         dockerfile: Dockerfile
       sync:
