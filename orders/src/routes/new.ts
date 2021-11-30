@@ -1,10 +1,15 @@
 import express, { Request, Response } from 'express';
-import { BadRequestError, NotFoundError, requireAuth, validateRequest } from '@bluepink-tickets/common';
+import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest } from '@bluepink-tickets/common';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import { Ticket } from '../models/ticket';
+import { Order } from '../models/order';
 
 const router = express.Router();
+
+// Set expiration window in seconds. 
+// TODO: EXTRACT THIS TO DB FOR CONFIGURABILITY
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 // NOTE: We should not make assumptions about the structure of the ID parameter during request validation.
 // We will do it here but this is something important to keep in mind.
@@ -35,13 +40,23 @@ router.post(
     }
 
     // Calculate an expiration date for this order
-
-
+    const expiration = new Date();
+    expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
+    
     // Build the order and save it to the database
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket
+    });
+    await order.save();
 
     // Publish an event saying that an order was created
 
-    res.send({});
+
+    // Send response
+    res.status(201).send(order);
 });
 
 export { router as newOrderRouter };
