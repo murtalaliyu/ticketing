@@ -4,6 +4,8 @@ import { body } from 'express-validator';
 import mongoose from 'mongoose';
 import { Ticket } from '../models/ticket';
 import { Order } from '../models/order';
+import { OrderCreatedPublisher } from '../events/publishers/order-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -25,7 +27,7 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { ticketId } = req.body;
+    const { ticketId } = req.body;  // deconstruct ticketId from the request body
 
     // Find the ticket the user is trying to order in the database
     const ticket = await Ticket.findById(ticketId);
@@ -52,8 +54,17 @@ router.post(
     });
     await order.save();
 
-    // Publish an event saying that an order was created
-
+    // Publish an order:created event
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: (order.expiresAt).toISOString(),   // to get a standardized UTC timezone
+      ticket: {
+        id: ticket.id,
+        price: ticket.price
+      }
+    });
 
     res.status(201).send(order);    // Send response
 });
