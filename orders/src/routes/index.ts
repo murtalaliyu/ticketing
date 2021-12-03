@@ -8,7 +8,7 @@ router.get('/api/orders', requireAuth, async (req: Request, res: Response) => {
   // get all orders for this user with related tickets
   const orders = await Order.find({ userId: req.currentUser!.id }).populate('ticket');
   
-  res.send(orders);
+  res.send(orders); // Send response
 });
 
 export { router as indexOrderRouter };
