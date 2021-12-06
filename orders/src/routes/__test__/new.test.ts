@@ -32,6 +32,7 @@ it('returns a status other than 401 if the user is authenticated', async () => {
 it('returns an error if an invalid userId/status/expiresAt/ticket is provided', async () => {
   // create ticket
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'this is a valid title',
     price: 10
   });
@@ -130,6 +131,7 @@ it('returns a 404 error if the ticket does not exist', async () => {
 it('returns a 400 error if the ticket is already reserved', async () => {
   // create a ticket
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'this is a valid title',
     price: 10
   });
@@ -154,6 +156,7 @@ it('returns a 400 error if the ticket is already reserved', async () => {
 it('successfully reserves a ticket', async () => {
   // create a ticket
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'this is a valid title',
     price: 10
   });
@@ -169,6 +172,7 @@ it('successfully reserves a ticket', async () => {
 it('emits an order created event', async () => {
   // create a ticket
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'this is a valid title',
     price: 10
   });

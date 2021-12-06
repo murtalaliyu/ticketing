@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
+  
+/* ---------------------------------------------------------------------------------------------------------- */
 
 const start = async () => {
   // make sure env variables are defined
@@ -38,6 +42,10 @@ const start = async () => {
   // graceful shutdown handler
   process.on('SIGINT', () => natsWrapper.client.close());  // interrupt signal (not functional on Windows)
   process.on('SIGTERM', () => natsWrapper.client.close()); // terminate signal (not functional on Windows)
+
+  // Create instances of event listeners
+  new TicketCreatedListener(natsWrapper.client).listen();
+  new TicketUpdatedListener(natsWrapper.client).listen();
 
   /* ---------------------------------------------------------------------------------------------------------- */
 
