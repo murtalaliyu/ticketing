@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 
 const start = async () => {
   // make sure env variables are defined
@@ -38,6 +40,10 @@ const start = async () => {
   // graceful shutdown handler
   process.on('SIGINT', () => natsWrapper.client.close());  // interrupt signal (not functional on Windows)
   process.on('SIGTERM', () => natsWrapper.client.close()); // terminate signal (not functional on Windows)
+
+  // listen for events
+  new OrderCreatedListener(natsWrapper.client).listen();
+  new OrderCancelledListener(natsWrapper.client).listen();
 
   /* ---------------------------------------------------------------------------------------------------------- */
 

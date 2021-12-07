@@ -1,4 +1,4 @@
-import { Listener, NotFoundError, OrderCreatedEvent, Subjects } from "@bluepink-tickets/common";
+import { Listener, OrderCreatedEvent, Subjects } from "@bluepink-tickets/common";
 import { queueGroupName } from "./queue-group-name";
 import { Message } from 'node-nats-streaming';
 import { Ticket } from "../../models/ticket";
@@ -23,7 +23,17 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     // Save the Ticket
     await ticket.save();
 
-    // ack the message
+    // Emit a ticket:updated event
+    await new TicketUpdatedPublisher(this.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      version: ticket.version,
+      userId: ticket.userId,
+      orderId: ticket.orderId
+    });
+
+    // Ack the message
     msg.ack();
   }
 }
