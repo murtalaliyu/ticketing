@@ -11,7 +11,7 @@ const router = express.Router();
 
 // Set expiration window in seconds. 
 // TODO: EXTRACT THIS TO DB FOR CONFIGURABILITY
-const EXPIRATION_WINDOW_SECONDS = 15 * 60;
+const EXPIRATION_WINDOW_SECONDS = 1 * 60;
 
 // NOTE: We should not make assumptions about the structure of the ID parameter during request validation.
 // We will do it here but this is something important to keep in mind.
