@@ -5,12 +5,12 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  # local:
-  #  push: false
-  googleCloudBuild:
-    projectId: lucky-triode-331100
+  local:
+    push: false
+  #googleCloudBuild:
+  #  projectId: lucky-triode-331100
   artifacts:
-    - image: us.gcr.io/lucky-triode-331100/auth
+    - image: b1uebank/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -18,7 +18,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/lucky-triode-331100/client
+    - image: b1uebank/client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -26,7 +26,7 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
-    - image: us.gcr.io/lucky-triode-331100/tickets
+    - image: b1uebank/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile
@@ -34,7 +34,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/lucky-triode-331100/orders
+    - image: b1uebank/orders
       context: orders
       docker:
         dockerfile: Dockerfile
@@ -42,7 +42,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/lucky-triode-331100/expiration
+    - image: b1uebank/expiration
       context: expiration
       docker:
         dockerfile: Dockerfile
@@ -50,7 +50,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: us.gcr.io/lucky-triode-331100/payments
+    - image: b1uebank/payments
       context: payments
       docker:
         dockerfile: Dockerfile
@@ -58,3 +58,5 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+
+#us.gcr.io/lucky-triode-331100

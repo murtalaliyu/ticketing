@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: payments
-          image: us.gcr.io/lucky-triode-331100/payments
+          image: b1uebank/payments
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

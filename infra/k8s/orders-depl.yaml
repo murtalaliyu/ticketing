@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: orders
-          image: us.gcr.io/lucky-triode-331100/orders
+          image: b1uebank/orders
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

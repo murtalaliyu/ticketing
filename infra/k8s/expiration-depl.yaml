@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: expiration
-          image: us.gcr.io/lucky-triode-331100/expiration
+          image: b1uebank/expiration
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

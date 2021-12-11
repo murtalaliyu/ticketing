@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: us.gcr.io/lucky-triode-331100/auth
+          image: b1uebank/auth
           env:
             - name: MONGO_URI
               value: 'mongodb://auth-mongo-clusterip-srv:27017/auth'
