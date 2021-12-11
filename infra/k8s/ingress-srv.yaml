@@ -31,6 +31,13 @@ spec:
                 name: orders-clusterip-srv
                 port:
                   number: 10002
+          - path: /api/payments/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: payments-clusterip-srv
+                port:
+                  number: 10003
           - path: /?(.*)
             pathType: Prefix
             backend:
