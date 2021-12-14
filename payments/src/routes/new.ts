@@ -44,8 +44,6 @@ async (req: Request, res: Response) => {
     throw new BadRequestError('Cannot pay for a cancelled order');
   }
 
-  console.log('orderStatus', order.status);
-
   // create a charge
   const charge = await stripe.charges.create({
     currency: 'usd',
