@@ -1,15 +1,18 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';  // adding ConnectOptions
 import jwt from 'jsonwebtoken';
+require('dotenv').config();
 
 jest.setTimeout(60000); // added this to avoid premature timeout on long-running tests
 
 // we have to tell TS that there is a global getCookie property below
 declare global {
-  var getCookie: () => string[];
+  var getCookie: (id?: string) => string[];
 }
 
-jest.mock('../nats-wrapper.ts'); // mock nats-wrapper 
+jest.mock('../nats-wrapper.ts'); // mock nats-wrapper
+
+const STRIPE_KEY = process.env.STRIPE_KEY;
 
 // start mongoose before all tests are run
 let mongo: any;
@@ -43,10 +46,10 @@ afterAll(async () => {
 });
 
 // globally (only accessible to tests) accessible helper function to send over cookie to authenticated requests
-global.getCookie = () => {
+global.getCookie = (id?: string) => {
   // build a JWT payload { id, email }
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com'
   };
 

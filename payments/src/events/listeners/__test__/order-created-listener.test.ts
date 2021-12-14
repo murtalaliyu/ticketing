@@ -3,6 +3,7 @@ import { natsWrapper } from "../../../nats-wrapper";
 import { OrderCreatedEvent, OrderStatus } from "@bluepink-tickets/common";
 import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
+import { Order } from '../../../models/order';
 
 const setup = async () => {
   // create listener
@@ -30,6 +31,20 @@ const setup = async () => {
   return { listener, data, msg };
 };
 
-it('', async () => {
-  
+it('replicates the order info', async () => {
+  const { listener, data, msg } = await setup();
+
+  await listener.onMessage(data, msg);
+
+  const order = await Order.findById(data.id);
+
+  expect(order!.price).toEqual(data.ticket.price);
+});
+
+it('acks the message', async () => {
+  const { listener, data, msg } = await setup();
+
+  await listener.onMessage(data, msg);
+
+  expect(msg.ack).toHaveBeenCalled();
 });
