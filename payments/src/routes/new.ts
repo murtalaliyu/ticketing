@@ -66,7 +66,7 @@ async (req: Request, res: Response) => {
   });
 
   // send the response
-  res.status(201).send({ payment: payment });
+  res.status(201).send({ id: payment.id });
 });
 
 export { router as createChargeRouter };
