@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // An interface that describes the properties
 // that are required to create a new Ticket
@@ -14,6 +15,8 @@ interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  version: number;  // we had to manually configure this below
+  orderId?: string;
 }
 
 // An interface that describes the properties
@@ -35,6 +38,9 @@ const ticketSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true
+  },
+  orderId: {
+    type: String
   }
 }, {
   toJSON: {
@@ -44,6 +50,10 @@ const ticketSchema = new mongoose.Schema({
     }
   }
 });
+
+// Configure Optimistic Concurrency Control (OCC) based on document version
+ticketSchema.set('versionKey', 'version');  // rename __v to version in the DB. This MUST come before ticketSchema.plugin(...) command
+ticketSchema.plugin(updateIfCurrentPlugin); // Wire updateIfCurrentPlugin to schema
 
 // build Ticket
 ticketSchema.statics.build = (attrs: TicketAttrs) => {

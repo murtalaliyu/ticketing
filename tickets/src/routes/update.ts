@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { NotFoundError, validateRequest, NotAuthorizedError, requireAuth } from '@bluepink-tickets/common';
+import { NotFoundError, validateRequest, NotAuthorizedError, requireAuth, BadRequestError } from '@bluepink-tickets/common';
 import { Ticket } from '../models/ticket';
 import { body } from 'express-validator';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -28,6 +28,11 @@ router.put(
       throw new NotAuthorizedError();
     }
 
+    // make sure ticket is not already reserved
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved Ticket');
+    }
+
     // update the ticket
     ticket.set({
       title: req.body.title,
@@ -38,6 +43,7 @@ router.put(
     // emit ticket:updated event
     new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
+      version: ticket.version,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId

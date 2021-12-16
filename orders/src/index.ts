@@ -1,6 +1,12 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
+import { ExpirationCompleteListener } from './events/listeners/expiration-complete-listener';
+import { PaymentCreatedListener } from './events/listeners/payment-created-listener';  
+
+/* ---------------------------------------------------------------------------------------------------------- */
 
 const start = async () => {
   // make sure env variables are defined
@@ -22,22 +28,33 @@ const start = async () => {
 
   /* ---------------------------------------------------------------------------------------------------------- */
 
-  // connect to NATS
-  await natsWrapper.connect(
-    process.env.NATS_CLUSTER_ID, 
-    process.env.NATS_CLIENT_ID, 
-    process.env.NATS_URL
-  );
+  try {
+    // connect to NATS
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID, 
+      process.env.NATS_CLIENT_ID, 
+      process.env.NATS_URL
+    );
 
-  // graceful shutdown listener
-  natsWrapper.client.on('close', () => {
-    console.log('NATS connection closed!');
-    process.exit();
-  });
+    // graceful shutdown listener
+    natsWrapper.client.on('close', () => {
+      console.log('NATS connection closed!');
+      process.exit();
+    });
 
-  // graceful shutdown handler
-  process.on('SIGINT', () => natsWrapper.client.close());  // interrupt signal (not functional on Windows)
-  process.on('SIGTERM', () => natsWrapper.client.close()); // terminate signal (not functional on Windows)
+    // graceful shutdown handler
+    process.on('SIGINT', () => natsWrapper.client.close());  // interrupt signal (not functional on Windows)
+    process.on('SIGTERM', () => natsWrapper.client.close()); // terminate signal (not functional on Windows)
+
+    // Create instances of event listeners
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
+    new ExpirationCompleteListener(natsWrapper.client).listen();
+    new PaymentCreatedListener(natsWrapper.client).listen();
+    
+  } catch (err) {
+    console.error(err);
+  }
 
   /* ---------------------------------------------------------------------------------------------------------- */
 
@@ -55,6 +72,6 @@ const start = async () => {
   app.listen(10002, () => {
     console.log('Listening on port 10002');
   });
-}
+};
 
 start();

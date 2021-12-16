@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { OrderStatus } from '@bluepink-tickets/common';
 import { TicketDoc } from './ticket';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // An interface that describes the properties
 // that are required to create a new Order
@@ -18,6 +19,7 @@ interface OrderDoc extends mongoose.Document {
   status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
+  version: number;
 }
 
 // An interface that describes the properties
@@ -53,6 +55,10 @@ const orderSchema = new mongoose.Schema({
     }
   }
 });
+
+// Configure Optimistic Concurrency Control (OCC) based on document version
+orderSchema.set('versionKey', 'version');  // rename __v to version in the DB. This MUST come before orderSchema.plugin(...) command
+orderSchema.plugin(updateIfCurrentPlugin); // Wire updateIfCurrentPlugin to schema
 
 // build Order
 orderSchema.statics.build = (attrs: OrderAttrs) => {

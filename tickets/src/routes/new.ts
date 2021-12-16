@@ -30,6 +30,7 @@ async (req: Request, res: Response) => {
   // emit ticket:created event
   await new TicketCreatedPublisher(natsWrapper.client).publish({
     id: ticket.id,
+    version: ticket.version,
     title: ticket.title,
     price: ticket.price,
     userId: ticket.userId
