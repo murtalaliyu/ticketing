@@ -12,8 +12,6 @@ declare global {
 
 jest.mock('../nats-wrapper.ts'); // mock nats-wrapper
 
-const STRIPE_KEY = process.env.STRIPE_KEY;
-
 // start mongoose before all tests are run
 let mongo: any;
 beforeAll(async () => {
