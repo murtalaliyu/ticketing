@@ -21,7 +21,7 @@ const start = async () => {
   }
 
   app.listen(10000, () => {
-    console.log('Listening on port 10000...');
+    console.log('Listening on port 10000....');
   });
 }
 
