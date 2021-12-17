@@ -1,7 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';  // adding ConnectOptions
 import jwt from 'jsonwebtoken';
-require('dotenv').config();
 
 jest.setTimeout(60000); // added this to avoid premature timeout on long-running tests
 
