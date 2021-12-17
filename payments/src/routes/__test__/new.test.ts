@@ -85,7 +85,6 @@ it('returns a 204 with valid inputs', async () => {
   await request(app)
     .post('/api/payments')
     .set('Cookie', global.getCookie(userId))
-    .set('Authorization', 'sk_test_51K6MRoKO0cS0QXukigsFHZomTuyc8zzODxxW1SOF2JmeBEp4Mp234xJvqt3huGkqaW5pZxm3w0CIwjK98xrpSYCq00eb1X6lJW')
     .send({
       token: 'tok_visa',
       orderId: order.id
