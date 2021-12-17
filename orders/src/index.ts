@@ -9,7 +9,7 @@ import { PaymentCreatedListener } from './events/listeners/payment-created-liste
 /* ---------------------------------------------------------------------------------------------------------- */
 
 const start = async () => {
-  console.log('Starting...');
+  console.log('Starting....');
 
   // make sure env variables are defined
   if (!process.env.JWT_KEY) {
