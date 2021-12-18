@@ -64,7 +64,7 @@ const start = async () => {
 
   // listen for traffic
   app.listen(10003, () => {
-    console.log('Listening on port 10003');
+    console.log('Listening on port 10003!!');
   });
 };
 
