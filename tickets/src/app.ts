@@ -19,7 +19,8 @@ app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: process.env.NODE_ENV !== 'test'
+    secure: false
+    //secure: process.env.NODE_ENV !== 'test'
   })
 );
 app.use(currentUser); // make sure this comes after the cookieSession middleware so that the cookieSession middleware can take a look at the cookie and set the req.session property

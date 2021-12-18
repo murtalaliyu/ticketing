@@ -7,7 +7,8 @@ export default ({ req }) => {
   if (typeof window === 'undefined') {
     // we are on the server. requests should be made to 'http://ingress-nginx-controller.ingress-nginx...'
     return axios.create({
-      baseURL: 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local',
+      //baseURL: 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local',
+      baseURL: 'http://www.tix-prod.xyz',
       headers: req.headers
     });
 
